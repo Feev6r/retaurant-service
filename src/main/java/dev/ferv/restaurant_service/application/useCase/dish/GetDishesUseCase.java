@@ -1,5 +1,7 @@
 package dev.ferv.restaurant_service.application.useCase.dish;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import dev.ferv.restaurant_service.domain.model.Dish;
@@ -28,6 +30,11 @@ public class GetDishesUseCase implements IGetDishesUseCase{
     @Override
     public PageResult<Dish> getByCategory(String name, int page, int size) {
         return dishPort.getDishByCategory(name, page, size);
+    }
+
+    @Override
+    public List<Dish> getAllById(List<Long> ids){
+        return dishPort.getAllById(ids);
     }
 
 }

@@ -6,32 +6,70 @@ public class Order {
 
     private Long id;
     private Long restaurantId; //map only id and name
-    private List<DishOrder> dishes;
+    private Long assignedEmployeeId;
+    private Long clientId;
+    private States state; 
+    private List<DishOrder> dishOrders;
 
-    public Order(Long id, Long restaurantId, List<DishOrder> dishes) {
+    public Order(){}
+
+    public Order(Long id, Long restaurantId, Long assignedEmployeeId, Long clientId, States state,
+            List<DishOrder> dishes) {
         this.id = id;
         this.restaurantId = restaurantId;
-        this.dishes = dishes;
+        this.assignedEmployeeId = assignedEmployeeId;
+        this.clientId = clientId;
+        this.state = state;
+        this.dishOrders = dishes;
     }
 
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
+
     public Long getRestaurantId() {
         return restaurantId;
     }
+
     public void setRestaurantId(Long restaurantId) {
         this.restaurantId = restaurantId;
     }
-    public List<DishOrder> getDishes() {
-        return dishes;
-    }
-    public void setDishes(List<DishOrder> dishes) {
-        this.dishes = dishes;
+
+    public List<DishOrder> getDishOrders() {
+        return dishOrders;
     }
 
+    public void setDishOrders(List<DishOrder> dishes) {
+        this.dishOrders = dishes;
+    }
+
+    public Long getAssignedEmployeeId() {
+        return assignedEmployeeId;
+    }
+
+    public void setAssignedEmployeeId(Long assignedEmployee) {
+        this.assignedEmployeeId = assignedEmployee;
+    }
+
+    public States getState() {
+        return state;
+    }
+
+    public void setState(States state) {
+        this.state = state;
+    }
+
+    public Long getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
+    }
     
+
 }

@@ -29,6 +29,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/restaurant/create").hasRole(Role.OWNER.name())
                 .requestMatchers("/restaurant/employee").hasRole(Role.OWNER.name())
                 .requestMatchers("/dish/create").hasRole(Role.OWNER.name())
+                .requestMatchers("/order/create").hasRole(Role.CLIENT.name())
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session

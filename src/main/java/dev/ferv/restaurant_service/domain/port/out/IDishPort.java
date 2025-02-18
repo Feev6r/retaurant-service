@@ -1,6 +1,8 @@
 package dev.ferv.restaurant_service.domain.port.out;
 
 
+import java.util.List;
+
 import dev.ferv.restaurant_service.domain.model.Dish;
 import dev.ferv.restaurant_service.domain.model.PageResult;
 
@@ -11,5 +13,7 @@ public interface IDishPort {
     PageResult<Dish> getByRestaurantId(Long restaurantId, int page, int size);
     Dish getDishById(Long id);
     PageResult<Dish> getDishByCategory(String name, int page, int size);
+    List<Dish> getAllById(List<Long> ids); 
+    
 
 }

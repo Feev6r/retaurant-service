@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import dev.ferv.restaurant_service.application.dto.request.RestaurantRequest;
 import dev.ferv.restaurant_service.application.dto.response.RestaurantResponse;
@@ -38,6 +39,7 @@ public class RestaurantService implements IRestaurantService{
     }
 
     @Override
+    @Transactional
     public void createRestaurant(RestaurantRequest restaurantRequest) { 
         Restaurant restaurant = restaurantMapper.toRestaurant(restaurantRequest);
         createRestaurantUseCase.createRestaurant(restaurant);
@@ -51,6 +53,7 @@ public class RestaurantService implements IRestaurantService{
     }
 
     @Override
+    @Transactional
     public void setEmployees(List<Long> ids) {
         setEmployeesUseCase.setEmployee(ids);
     }

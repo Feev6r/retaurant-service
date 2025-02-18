@@ -6,6 +6,8 @@ public class DishOrder {
     private Integer quantity;
     private Dish dish;
 
+    public DishOrder(){}
+
     public DishOrder(Long id, Integer quantity, Dish dish) {
         this.id = id;
         this.quantity = quantity;

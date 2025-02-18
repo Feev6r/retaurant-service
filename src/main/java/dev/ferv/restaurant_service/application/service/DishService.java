@@ -3,6 +3,7 @@ package dev.ferv.restaurant_service.application.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import dev.ferv.restaurant_service.application.dto.request.DishRequest;
 import dev.ferv.restaurant_service.application.dto.request.DishUpdateRequest;
@@ -35,6 +36,7 @@ public class DishService implements IDishService{
     }
 
     @Override
+    @Transactional
     public void createDish(DishRequest dishRequest) {
 
         Dish dish = dishMapper.toDish(dishRequest);
@@ -49,6 +51,7 @@ public class DishService implements IDishService{
     }
 
     @Override
+    @Transactional
     public void updateDish(DishUpdateRequest dishUpdateRequest) {
          
         Dish dish = getDishesUseCase.getDish(dishUpdateRequest.getId());
