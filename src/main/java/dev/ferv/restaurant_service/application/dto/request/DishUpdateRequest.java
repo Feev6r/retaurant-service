@@ -1,6 +1,6 @@
 package dev.ferv.restaurant_service.application.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class DishUpdateRequest {
 
-    @NotBlank
+    @NotNull
     public Long id;
     public Double price;
     public String description;

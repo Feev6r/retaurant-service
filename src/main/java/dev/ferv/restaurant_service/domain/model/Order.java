@@ -11,7 +11,9 @@ public class Order {
     private States state; 
     private List<DishOrder> dishOrders;
 
-    public Order(){}
+    public Order(){
+        state = States.PENDING;
+    }
 
     public Order(Long id, Long restaurantId, Long assignedEmployeeId, Long clientId, States state,
             List<DishOrder> dishes) {

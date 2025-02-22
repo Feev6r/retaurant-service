@@ -2,7 +2,9 @@ package dev.ferv.restaurant_service.application.dto.request;
 
 import java.util.List;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,8 +12,11 @@ import lombok.Setter;
 @Setter
 public class OrderRequest {
 
-    @NotBlank
+    @NotNull
+    @Positive
     Long restaurantId;
-    @NotBlank
+
+    @NotNull
+    @NotEmpty
     List<DishOrderRequest> dishOrders;
 }

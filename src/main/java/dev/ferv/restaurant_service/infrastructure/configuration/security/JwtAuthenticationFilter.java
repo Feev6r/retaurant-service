@@ -1,7 +1,6 @@
 package dev.ferv.restaurant_service.infrastructure.configuration.security;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,8 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import dev.ferv.restaurant_service.domain.model.client.UserClient;
-import dev.ferv.restaurant_service.domain.port.out.IUserClientPort;
+import dev.ferv.restaurant_service.domain.port.out.IJwtPort;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter{
 
-    private final IUserClientPort userClientPort;
+    private final IJwtPort jwtPort;
 
     @Override
     protected void doFilterInternal(
@@ -31,29 +29,44 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
         @SuppressWarnings("null") FilterChain filterChain)
             throws ServletException, IOException {
   
-        String jwt = extractJwtFromRequest(request);
+        try {
 
-        if (jwt != null) {
+            String jwt = extractJwtFromRequest(request);
 
-            UserClient user = userClientPort.getUser("Bearer " + jwt); //get user from the user-service (microservice) 
+            if (jwt != null) {
 
-            if (user != null) { //if it is null that means the jwt was not valid 
+                String username = jwtPort.extractUsername(jwt);
+                String role = jwtPort.extractRoles(jwt);
 
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(  
-                        user.getUsername(), //set the username (email in this case)
-                        null, 
-                        List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
-                );
+                    SecurityContext.setToken(jwt); //store the jwt during the request 
 
-                auth.setDetails(new HashMap<String, String>() {{ //add the id to the details, we'll need this information later
-                    put("id", user.getId().toString());
-                }});
+                    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(  
+                            username, //set the username (email in this case)
+                            null, 
+                            List.of(new SimpleGrantedAuthority("ROLE_" + role))
+                    );         
 
-                SecurityContextHolder.getContext().setAuthentication(auth); //set it to the context
+                    SecurityContextHolder.getContext().setAuthentication(auth); //set it to the context
+                }
+                else {  // JWT was invalid or not found
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); 
+                return;
+            
             }
+        
+        }
+        catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, e.getMessage()); // 503 Unavailable
+            System.out.println(e.getMessage());
+            return;
         }
 
-        filterChain.doFilter(request, response);
+        try{
+            filterChain.doFilter(request, response);
+        }
+        finally{
+            SecurityContext.clear();
+        }
 
     }
 

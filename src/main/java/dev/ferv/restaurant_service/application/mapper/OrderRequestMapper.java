@@ -12,9 +12,12 @@ import dev.ferv.restaurant_service.domain.model.DishOrder;
 import dev.ferv.restaurant_service.domain.model.Order;
 import dev.ferv.restaurant_service.domain.port.in.dish.IGetDishesUseCase;
 import dev.ferv.restaurant_service.domain.port.in.order.ICreateOrderUseCase;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class OrderRequestMapper {
+
 
     public Order toOrder(OrderRequest orderRequest,ICreateOrderUseCase createOrderUseCase, IGetDishesUseCase getDishesUseCase ){
 

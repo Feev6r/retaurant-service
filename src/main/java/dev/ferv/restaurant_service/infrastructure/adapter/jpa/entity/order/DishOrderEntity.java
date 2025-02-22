@@ -6,7 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +25,7 @@ public class DishOrderEntity {
 
     private Integer quantity;
 
-    @OneToOne
-    @JoinColumn(name = "dish_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "dish_id", referencedColumnName = "id")
     private DishEntity dish;
 }

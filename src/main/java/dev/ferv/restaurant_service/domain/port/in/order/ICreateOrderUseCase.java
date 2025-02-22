@@ -4,5 +4,5 @@ import dev.ferv.restaurant_service.domain.model.Order;
 
 public interface ICreateOrderUseCase {
 
-    void createOrder(Order order);
+    Order createOrder(Order order);
 }

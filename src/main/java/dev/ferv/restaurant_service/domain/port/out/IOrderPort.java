@@ -4,6 +4,6 @@ import dev.ferv.restaurant_service.domain.model.Order;
 
 public interface IOrderPort {
 
-    void createOrder(Order order);
+    Order createOrder(Order order);
     void updateOrder(Order order);
 }
