@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import dev.ferv.restaurant_service.infrastructure.exeption.DishNotFoundExeption;
 import dev.ferv.restaurant_service.infrastructure.exeption.NoDataFoundExeption;
+import dev.ferv.restaurant_service.infrastructure.exeption.OrderNotFoundExeption;
 import dev.ferv.restaurant_service.infrastructure.exeption.RestaurantNotFoundExeption;
 
 @ControllerAdvice
@@ -35,6 +36,11 @@ public class ControllerAdvisor {
     public ResponseEntity<Map<String, String>> handlePhotoNotFoundExeption(RestaurantNotFoundExeption photoNotFoundExeption){
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(Collections.singletonMap(MESSAGE, ExeptionResponse.RESTAURANT_NOT_FOUND.getMessage()));
+    }
+    @ExceptionHandler(OrderNotFoundExeption.class)
+    public ResponseEntity<Map<String, String>> handlePhotoNotFoundExeption(OrderNotFoundExeption orderNotFoundExeption){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(Collections.singletonMap(MESSAGE, ExeptionResponse.ORDER_NOT_FOUND.getMessage()));
     }
     
 

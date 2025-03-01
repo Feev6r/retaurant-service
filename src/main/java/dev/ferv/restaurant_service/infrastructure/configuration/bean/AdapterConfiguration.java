@@ -55,7 +55,7 @@ public class AdapterConfiguration {
 
     @Bean 
     IOrderPort orderPort(){
-        return new OrderAdapter(orderRepository, orderEntityMapper, dishOrderrRepository, dishOrderMapper);
+        return new OrderAdapter(orderRepository, orderEntityMapper, dishOrderrRepository, dishOrderMapper, pageMapper);
     }
 
 

@@ -38,4 +38,12 @@ public class RestaurantAdapter implements IRestaurantPort{
             .orElseThrow(RestaurantNotFoundExeption::new));
     }
 
+    @Override
+    public Restaurant getById(Long id) {
+        return restaurantEntityMapper.toRestaurant(restaurantRepository.findById(id)
+        .orElseThrow(RestaurantNotFoundExeption::new));
+    }
+
+    
+
 }

@@ -8,4 +8,5 @@ public interface IRestaurantPort {
     void saveRestaurant(Restaurant restaurant);
     Restaurant getByOwnerId(Long id); 
     PageResult<Restaurant> getAllRestaurant(int page, int size);
+    Restaurant getById(Long id);
 }

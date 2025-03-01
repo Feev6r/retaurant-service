@@ -4,21 +4,20 @@ import org.springframework.stereotype.Component;
 
 import dev.ferv.restaurant_service.domain.model.client.OrderTraceClient;
 import dev.ferv.restaurant_service.domain.port.in.order.ICreateOrderTraceabilityUseCase;
-import dev.ferv.restaurant_service.domain.port.out.IOrderTraceabilityPort;
-import dev.ferv.restaurant_service.infrastructure.configuration.security.SecurityContext;
+import dev.ferv.restaurant_service.domain.port.out.ITraceabilityPort;
 
 @Component
 public class CreateOrderTraceabilityUseCase implements ICreateOrderTraceabilityUseCase{
 
-    private final IOrderTraceabilityPort orderTraceabilityPort;
+    private final ITraceabilityPort orderTraceabilityPort;
  
-    public CreateOrderTraceabilityUseCase(IOrderTraceabilityPort orderTraceabilityPort) {
+    public CreateOrderTraceabilityUseCase(ITraceabilityPort orderTraceabilityPort) {
         this.orderTraceabilityPort = orderTraceabilityPort;
     }
 
     @Override
-    public void createOrderTraceability(OrderTraceClient orderTraceClient) {
-        orderTraceabilityPort.createOrderTrace(orderTraceClient, "Bearer " + SecurityContext.getToken());
+    public void createOrderTraceability(OrderTraceClient orderTraceClient, String jwtToken) {
+        orderTraceabilityPort.createOrderTrace(orderTraceClient, jwtToken);
     }
 
 }

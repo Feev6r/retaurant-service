@@ -9,8 +9,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import dev.ferv.restaurant_service.application.dto.response.DishResponse;
+import dev.ferv.restaurant_service.application.dto.response.OrderResponse;
 import dev.ferv.restaurant_service.application.dto.response.RestaurantResponse;
 import dev.ferv.restaurant_service.domain.model.Dish;
+import dev.ferv.restaurant_service.domain.model.Order;
 import dev.ferv.restaurant_service.domain.model.PageResult;
 import dev.ferv.restaurant_service.domain.model.Restaurant;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class PageDtoMapper {
 
     private final DishMapper dishMapper;
     private final RestaurantMapper restaurantMapper;
+    private final OrderResponseMapper orderResponseMapper;
 
     public Page<DishResponse> toPageDishResponse(PageResult<Dish> pageResult){
 
@@ -37,6 +40,14 @@ public class PageDtoMapper {
            .map(restaurantMapper::toResponse).collect(Collectors.toList());
 
        return new PageImpl<>(RestaurantResponseList, PageRequest.of(pageResult.getPage(), pageResult.getSize()), pageResult.getTotalElements());
-   }
+    }
+    
+    public Page<OrderResponse> toPageOrderResponse(PageResult<Order> pageResult){
+
+        List<OrderResponse> orderResponseList = pageResult.getContent().stream()
+           .map(orderResponseMapper::toResponse).collect(Collectors.toList());
+
+       return new PageImpl<>(orderResponseList, PageRequest.of(pageResult.getPage(), pageResult.getSize()), pageResult.getTotalElements());
+    }
 }
 

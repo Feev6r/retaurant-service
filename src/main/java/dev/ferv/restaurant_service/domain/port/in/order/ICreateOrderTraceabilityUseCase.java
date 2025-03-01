@@ -4,5 +4,5 @@ import dev.ferv.restaurant_service.domain.model.client.OrderTraceClient;
 
 public interface ICreateOrderTraceabilityUseCase {
 
-    void createOrderTraceability(OrderTraceClient orderTraceClient);
+    void createOrderTraceability(OrderTraceClient orderTraceClient, String jwtToken);
 }
