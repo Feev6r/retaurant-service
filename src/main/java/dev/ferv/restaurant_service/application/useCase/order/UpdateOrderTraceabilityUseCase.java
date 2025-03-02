@@ -17,8 +17,8 @@ public class UpdateOrderTraceabilityUseCase implements IUpdateOrderTraceabilityU
     }
 
     @Override
-    public void updateOrderTrace(Long orderId, States newState, String jwtToken) {
-        orderTraceabilityPort.updateOrderTrace(orderId, newState, jwtToken);
+    public void updateOrderTrace(Long orderId, Long employeeId, States newState, String jwtToken) {
+        orderTraceabilityPort.updateOrderTrace(orderId, employeeId, newState, jwtToken);
     }
 
 }

@@ -23,6 +23,7 @@ import dev.ferv.restaurant_service.domain.port.in.order.ISignOrderUseCase;
 import dev.ferv.restaurant_service.domain.port.in.order.IUpdateEmployeeTraceUseCase;
 import dev.ferv.restaurant_service.domain.port.in.order.IUpdateOrderStateUseCase;
 import dev.ferv.restaurant_service.domain.port.in.order.IUpdateOrderTraceabilityUseCase;
+import dev.ferv.restaurant_service.domain.port.out.IJwtPort;
 import dev.ferv.restaurant_service.infrastructure.configuration.security.SecurityContext;
 
 @Service
@@ -40,13 +41,15 @@ public class OrderService implements IOrderService{
     private final IUpdateEmployeeTraceUseCase updateEmployeeTraceUseCase;
     private final PageDtoMapper pageDtoMapper;
     private final ICancelOrderUseCase cancelOrderUseCase;
+    private final IJwtPort jwtPort;
+
 
     public OrderService(ICreateOrderUseCase createOrderUseCase, IGetDishesUseCase getDishesUseCase,
             OrderRequestMapper orderRequestMapper, ICreateOrderTraceabilityUseCase orderTraceabilityUseCase,
             ISignOrderUseCase signOrderUseCase, IUpdateOrderStateUseCase updateOrderStateUseCase,
             IUpdateOrderTraceabilityUseCase updateOrderTraceabilityUseCase, OrderMapper orderMapper,
             IGetOrdersUseCase getOrdersUseCase, IUpdateEmployeeTraceUseCase updateEmployeeTraceUseCase,
-            PageDtoMapper pageDtoMapper, ICancelOrderUseCase cancelOrderUseCase) {
+            PageDtoMapper pageDtoMapper, ICancelOrderUseCase cancelOrderUseCase, IJwtPort jwtPort) {
         this.createOrderUseCase = createOrderUseCase;
         this.getDishesUseCase = getDishesUseCase;
         this.orderRequestMapper = orderRequestMapper;
@@ -59,6 +62,7 @@ public class OrderService implements IOrderService{
         this.updateEmployeeTraceUseCase = updateEmployeeTraceUseCase;
         this.pageDtoMapper = pageDtoMapper;
         this.cancelOrderUseCase = cancelOrderUseCase;
+        this.jwtPort = jwtPort;
     }
 
     @Override
@@ -87,14 +91,14 @@ public class OrderService implements IOrderService{
     @Transactional
     public void updateOrderState(Long orderId, States state) {
         updateOrderStateUseCase.updateOrderState(orderId, state);     
-        updateOrderTraceabilityUseCase.updateOrderTrace(orderId, state, "Bearer " + SecurityContext.getToken());
+        updateOrderTraceabilityUseCase.updateOrderTrace(orderId, jwtPort.getIdBySecurityContext(), state, "Bearer " + SecurityContext.getToken());
 
     }
 
     @Override
     public void cancelOrder(Long orderId) {
         cancelOrderUseCase.cancelOrder(orderId);
-        updateOrderTraceabilityUseCase.updateOrderTrace(orderId, States.CANCELLED, "Bearer " + SecurityContext.getToken());
+        updateOrderTraceabilityUseCase.updateOrderTrace(orderId, jwtPort.getIdBySecurityContext(), States.CANCELLED, "Bearer " + SecurityContext.getToken());
     }
 
     @Override

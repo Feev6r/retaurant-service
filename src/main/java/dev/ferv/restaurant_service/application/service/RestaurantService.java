@@ -8,15 +8,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import dev.ferv.restaurant_service.application.dto.request.RestaurantRequest;
+import dev.ferv.restaurant_service.application.dto.response.EmployeeResponse;
 import dev.ferv.restaurant_service.application.dto.response.RestaurantResponse;
+import dev.ferv.restaurant_service.application.mapper.EmployeeResponseMapper;
 import dev.ferv.restaurant_service.application.mapper.PageDtoMapper;
 import dev.ferv.restaurant_service.application.mapper.RestaurantMapper;
 import dev.ferv.restaurant_service.application.service.interfaces.IRestaurantService;
 import dev.ferv.restaurant_service.domain.model.PageResult;
 import dev.ferv.restaurant_service.domain.model.Restaurant;
+import dev.ferv.restaurant_service.domain.port.in.employee.IGetEmployeeRankingUseCase;
 import dev.ferv.restaurant_service.domain.port.in.restaurant.ICreateRestaurantUseCase;
 import dev.ferv.restaurant_service.domain.port.in.restaurant.IGetRestaurantUseCase;
 import dev.ferv.restaurant_service.domain.port.in.restaurant.ISetEmployeesUseCase;
+import dev.ferv.restaurant_service.domain.port.out.IJwtPort;
+import dev.ferv.restaurant_service.infrastructure.configuration.security.SecurityContext;
 
 @Service
 public class RestaurantService implements IRestaurantService{
@@ -25,17 +30,23 @@ public class RestaurantService implements IRestaurantService{
     private final IGetRestaurantUseCase getRestaurantsUseCase;
     private final ISetEmployeesUseCase setEmployeesUseCase;
     private final RestaurantMapper restaurantMapper;
+    private final IGetEmployeeRankingUseCase getEmployeeRankingUseCase;
     private final PageDtoMapper pageDtoMapper;
+    private final EmployeeResponseMapper employeeResponseMapper;
+    private final IJwtPort jwtPort;
 
-    
     public RestaurantService(ICreateRestaurantUseCase createRestaurantUseCase,
             IGetRestaurantUseCase getRestaurantsUseCase, ISetEmployeesUseCase setEmployeesUseCase,
-            RestaurantMapper restaurantMapper, PageDtoMapper pageDtoMapper) {
+            RestaurantMapper restaurantMapper, IGetEmployeeRankingUseCase getEmployeeRankingUseCase,
+            PageDtoMapper pageDtoMapper, EmployeeResponseMapper employeeResponseMapper, IJwtPort jwtPort) {
         this.createRestaurantUseCase = createRestaurantUseCase;
         this.getRestaurantsUseCase = getRestaurantsUseCase;
         this.setEmployeesUseCase = setEmployeesUseCase;
         this.restaurantMapper = restaurantMapper;
+        this.getEmployeeRankingUseCase = getEmployeeRankingUseCase;
         this.pageDtoMapper = pageDtoMapper;
+        this.employeeResponseMapper = employeeResponseMapper;
+        this.jwtPort = jwtPort;
     }
 
     @Override
@@ -57,5 +68,23 @@ public class RestaurantService implements IRestaurantService{
     public void setEmployees(List<Long> ids) {
         setEmployeesUseCase.setEmployee(ids);
     }
+
+    @Override
+    public List<EmployeeResponse> getEmployeeRanking(Long restaurantId){
+
+        Long employeeId = jwtPort.getIdBySecurityContext();
+
+        Restaurant restaurant = getRestaurantsUseCase.getRestaurantById(restaurantId);
+
+        if(employeeId != restaurant.getOwnerId()){
+            throw new RuntimeException("The restaurant does not belongs to the current owner");
+        }
+
+        return employeeResponseMapper.toResponseList(
+            getEmployeeRankingUseCase.getEmployeeRanking(restaurant.getEmployeesId(), "Bearer " + SecurityContext.getToken())
+            );
+        
+    }
+
 
 }

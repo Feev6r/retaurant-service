@@ -4,5 +4,5 @@ import dev.ferv.restaurant_service.domain.model.States;
 
 public interface IUpdateOrderTraceabilityUseCase {
 
-    void updateOrderTrace(Long orderId, States newState, String jwtToken);
+    void updateOrderTrace(Long orderId, Long employeeId, States newState, String jwtToken);
 }

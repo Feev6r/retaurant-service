@@ -20,4 +20,9 @@ public class GetRestaurantsUseCase implements IGetRestaurantUseCase{
     public PageResult<Restaurant> getRestaurants(int page, int size){
         return restaurantPort.getAllRestaurant(page, size);
     }
+
+    @Override
+    public Restaurant getRestaurantById(Long restaurantId) {
+        return restaurantPort.getById(restaurantId);
+    }
 }

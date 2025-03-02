@@ -2,29 +2,33 @@ package dev.ferv.restaurant_service.domain.model.client;
 
 public class UserClient {
 
-    private Long id;
+    private String firstname;
+    private String lastname;
     private String email;
-    private Role role;
+    private String phoneNumber;
 
-    public UserClient() {
-    }
-
-    public UserClient(Long id, String email, Role role) {
-        this.id = id;
+    public UserClient(String firstname, String lastname, String email, String phoneNumber) {
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.email = email;
-        this.role = role;
+        this.phoneNumber = phoneNumber;
     }
 
-    public String getUsername(){
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public String getEmail() {
         return email;
     }
 
-    public Role getRole() {
-        return role;
-    }   
-    
-    public Long getId(){
-        return id;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
+
 }
 

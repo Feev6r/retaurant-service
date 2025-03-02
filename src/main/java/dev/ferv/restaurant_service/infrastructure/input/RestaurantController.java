@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.ferv.restaurant_service.application.dto.request.RestaurantRequest;
+import dev.ferv.restaurant_service.application.dto.response.EmployeeResponse;
 import dev.ferv.restaurant_service.application.dto.response.RestaurantResponse;
 import dev.ferv.restaurant_service.application.service.interfaces.IRestaurantService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -54,6 +56,12 @@ public class RestaurantController {
         restaurantService.setEmployees(ids);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @GetMapping("/employee/ranking/{restaurantId}")
+    public ResponseEntity<List<EmployeeResponse>> getRanking(@PathVariable Long restaurantId) {
+        return ResponseEntity.ok(restaurantService.getEmployeeRanking(restaurantId));
+    }
+    
     
 
 }
