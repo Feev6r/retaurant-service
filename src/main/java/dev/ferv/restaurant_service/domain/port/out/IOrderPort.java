@@ -13,4 +13,5 @@ public interface IOrderPort {
     Order getOrderById(Long id);
     PageResult<Order> getAllByRestaurantIdAndState(Long restaurantId, States state, int page, int size);
     boolean hasClientAnOrderUnfinished(Long clientId, List<States> states);
+    Long getCurrentOrder(Long clientId, Long restaurantId, List<States> states);
 }

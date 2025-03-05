@@ -76,4 +76,12 @@ public class OrderAdapter implements IOrderPort{
         return orderRepository.existsByClientIdAndStateIn(clientId, states);
     }
  
+    @Override 
+    public Long getCurrentOrder(Long clientId, Long restaurantId, List<States> states){
+        OrderEntity orderEntity = orderRepository.findByRestaurantIdAndClientIdAndStateIn(restaurantId, clientId, states)
+            .orElse(null);
+
+        if(orderEntity == null) return null;
+        return orderEntity.getId();
+    }
 }

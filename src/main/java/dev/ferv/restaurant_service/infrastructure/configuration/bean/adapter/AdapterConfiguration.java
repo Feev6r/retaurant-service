@@ -1,4 +1,4 @@
-package dev.ferv.restaurant_service.infrastructure.configuration.bean;
+package dev.ferv.restaurant_service.infrastructure.configuration.bean.adapter;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

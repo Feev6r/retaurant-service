@@ -26,6 +26,8 @@ public class SecurityConfiguration {
             .disable()
             )
             .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+
                 .requestMatchers("/restaurant/create").hasRole(Role.OWNER.name())
                 .requestMatchers("/restaurant/employee").hasRole(Role.OWNER.name())
                 .requestMatchers("/dish/create").hasRole(Role.OWNER.name())

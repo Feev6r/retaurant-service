@@ -20,4 +20,9 @@ public class UpdateOrderStateUseCase implements IUpdateOrderStateUseCase{
         orderDomainService.updateState(orderId, state);
     }
 
+    @Override
+    public void deliverOrder(Long orderId, String pin) {
+        orderDomainService.setOrderAsDelivered(orderId, pin);
+    }
+
 }

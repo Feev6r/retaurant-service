@@ -18,18 +18,25 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends OncePerRequestFilter{
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final IJwtPort jwtPort;
 
     @Override
     protected void doFilterInternal(
-        @SuppressWarnings("null") HttpServletRequest request, 
-        @SuppressWarnings("null") HttpServletResponse response, 
-        @SuppressWarnings("null") FilterChain filterChain)
+            @SuppressWarnings("null") HttpServletRequest request,
+            @SuppressWarnings("null") HttpServletResponse response,
+            @SuppressWarnings("null") FilterChain filterChain)
             throws ServletException, IOException {
-  
+
         try {
+
+            String path = request.getRequestURI();
+
+            if (path.startsWith("/v3/api-docs") || path.startsWith("/swagger-ui")) {
+                filterChain.doFilter(request, response); // No aplica autenticación
+                return;
+            }
 
             String jwt = extractJwtFromRequest(request);
 
@@ -38,33 +45,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
                 String username = jwtPort.extractUsername(jwt);
                 String role = jwtPort.extractRoles(jwt);
 
-                    SecurityContext.setToken(jwt); //store the jwt during the request 
+                SecurityContext.setToken(jwt); // store the jwt during the request
 
-                    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(  
-                            username, //set the username (email in this case)
-                            null, 
-                            List.of(new SimpleGrantedAuthority("ROLE_" + role))
-                    );         
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                        username, // set the username (email in this case)
+                        null,
+                        List.of(new SimpleGrantedAuthority("ROLE_" + role)));
 
-                    SecurityContextHolder.getContext().setAuthentication(auth); //set it to the context
-                }
-                else {  // JWT was invalid or not found
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); 
+                SecurityContextHolder.getContext().setAuthentication(auth); // set it to the context
+            } 
+            else { // JWT was invalid or not found
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
-            
             }
-        
-        }
-        catch (Exception e) {
+
+        } catch (Exception e) {
             response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, e.getMessage()); // 503 Unavailable
             System.out.println(e.getMessage());
             return;
         }
 
-        try{
+        try {
             filterChain.doFilter(request, response);
-        }
-        finally{
+        } finally {
             SecurityContext.clear();
         }
 

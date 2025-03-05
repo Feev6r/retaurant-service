@@ -1,6 +1,7 @@
 package dev.ferv.restaurant_service.infrastructure.adapter.jpa.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,5 +14,6 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long>{
 
     Page<OrderEntity> findAllByRestaurantIdAndState(Long restaurantId, States state, Pageable pageable);
     boolean existsByClientIdAndStateIn(Long clientId, List<States> states);
+    Optional<OrderEntity> findByRestaurantIdAndClientIdAndStateIn(Long restaurantId, Long clientId, List<States> states);
 
 }

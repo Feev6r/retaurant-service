@@ -8,6 +8,8 @@ import dev.ferv.restaurant_service.application.dto.request.DishRequest;
 import dev.ferv.restaurant_service.application.dto.request.DishUpdateRequest;
 import dev.ferv.restaurant_service.application.dto.response.DishResponse;
 import dev.ferv.restaurant_service.application.service.interfaces.IDishService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,21 @@ public class DishController {
 
     private final IDishService dishService;
 
+
+    @Operation(
+        description = "obtains all the dishes by a restaurant. ROLE: EMPLOYEE",
+        summary = "obtain dishes ",
+        responses = {
+            @ApiResponse(
+                description = "Succes",
+                responseCode = "200"
+            ),
+            @ApiResponse(
+                description = "Unauthorized",
+                responseCode = "403"
+            )
+        }
+    )
     @GetMapping("/{restaurantId}")
     public ResponseEntity<Page<DishResponse>> getDishes(
 
@@ -41,6 +58,20 @@ public class DishController {
         return ResponseEntity.ok(dishService.getDishes(restaurantId, page, size));
     }
 
+    @Operation(
+        description = "obtains all the dishes by a restaurant. ROLE: EMPLOYEE",
+        summary = "obtain dishes ",
+        responses = {
+            @ApiResponse(
+                description = "Succes",
+                responseCode = "200"
+            ),
+            @ApiResponse(
+                description = "Unauthorized",
+                responseCode = "403"
+            )
+        }
+    )
     @GetMapping("category/{category}")
     public ResponseEntity<Page<DishResponse>> getMethodName(
 
@@ -52,12 +83,40 @@ public class DishController {
     }
     
     
+    @Operation(
+        description = "creates a dish. ROLE: OWNER",
+        summary = "creates a dish",
+        responses = {
+            @ApiResponse(
+                description = "Succes",
+                responseCode = "200"
+            ),
+            @ApiResponse(
+                description = "Unauthorized",
+                responseCode = "403"
+            )
+        }
+    )
     @PostMapping("/create")
     public ResponseEntity<Void> createDish(@RequestBody @Valid DishRequest dishRequest) {
         dishService.createDish(dishRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build(); 
     }
     
+    @Operation(
+        description = "updates a dish. ROLE: OWNER",
+        summary = "updates a dish",
+        responses = {
+            @ApiResponse(
+                description = "Succes",
+                responseCode = "200"
+            ),
+            @ApiResponse(
+                description = "Unauthorized",
+                responseCode = "403"
+            )
+        }
+    )
     @PutMapping("/update")
     public ResponseEntity<Void> updateDish(@RequestBody DishUpdateRequest dishUpdateRequest) {
         dishService.updateDish(dishUpdateRequest);

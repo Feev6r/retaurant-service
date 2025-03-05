@@ -6,8 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import dev.ferv.restaurant_service.application.dto.request.OrderRequest;
 import dev.ferv.restaurant_service.application.dto.response.OrderResponse;
+import dev.ferv.restaurant_service.application.dto.response.OrderTraceabilityResponse;
 import dev.ferv.restaurant_service.application.mapper.OrderMapper;
 import dev.ferv.restaurant_service.application.mapper.OrderRequestMapper;
+import dev.ferv.restaurant_service.application.mapper.OrderTraceabilityMapper;
 import dev.ferv.restaurant_service.application.mapper.PageDtoMapper;
 import dev.ferv.restaurant_service.application.service.interfaces.IOrderService;
 import dev.ferv.restaurant_service.domain.model.Order;
@@ -42,14 +44,15 @@ public class OrderService implements IOrderService{
     private final PageDtoMapper pageDtoMapper;
     private final ICancelOrderUseCase cancelOrderUseCase;
     private final IJwtPort jwtPort;
-
+    private final OrderTraceabilityMapper orderTraceabilityMapper;
 
     public OrderService(ICreateOrderUseCase createOrderUseCase, IGetDishesUseCase getDishesUseCase,
             OrderRequestMapper orderRequestMapper, ICreateOrderTraceabilityUseCase orderTraceabilityUseCase,
             ISignOrderUseCase signOrderUseCase, IUpdateOrderStateUseCase updateOrderStateUseCase,
             IUpdateOrderTraceabilityUseCase updateOrderTraceabilityUseCase, OrderMapper orderMapper,
             IGetOrdersUseCase getOrdersUseCase, IUpdateEmployeeTraceUseCase updateEmployeeTraceUseCase,
-            PageDtoMapper pageDtoMapper, ICancelOrderUseCase cancelOrderUseCase, IJwtPort jwtPort) {
+            PageDtoMapper pageDtoMapper, ICancelOrderUseCase cancelOrderUseCase, IJwtPort jwtPort,
+            OrderTraceabilityMapper orderTraceabilityMapper) {
         this.createOrderUseCase = createOrderUseCase;
         this.getDishesUseCase = getDishesUseCase;
         this.orderRequestMapper = orderRequestMapper;
@@ -63,6 +66,7 @@ public class OrderService implements IOrderService{
         this.pageDtoMapper = pageDtoMapper;
         this.cancelOrderUseCase = cancelOrderUseCase;
         this.jwtPort = jwtPort;
+        this.orderTraceabilityMapper = orderTraceabilityMapper;
     }
 
     @Override
@@ -96,6 +100,13 @@ public class OrderService implements IOrderService{
     }
 
     @Override
+    @Transactional
+    public void deliverOrder(Long orderId, String pin){
+        updateOrderStateUseCase.deliverOrder(orderId, pin);
+        updateOrderTraceabilityUseCase.updateOrderTrace(orderId, jwtPort.getIdBySecurityContext(), States.DELIVERED, "Bearer " + SecurityContext.getToken());
+    }
+
+    @Override
     public void cancelOrder(Long orderId) {
         cancelOrderUseCase.cancelOrder(orderId);
         updateOrderTraceabilityUseCase.updateOrderTrace(orderId, jwtPort.getIdBySecurityContext(), States.CANCELLED, "Bearer " + SecurityContext.getToken());
@@ -107,4 +118,10 @@ public class OrderService implements IOrderService{
         return pageDtoMapper.toPageOrderResponse(pageResult);
     }
  
+    @Override
+    public OrderTraceabilityResponse getOrderTraceability(Long restaurantId){
+        return orderTraceabilityMapper.toResponse(
+            getOrdersUseCase.getOrderTraceability(restaurantId, "Bearer " + SecurityContext.getToken())
+        );
+    }
 }

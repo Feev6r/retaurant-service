@@ -14,6 +14,7 @@ import dev.ferv.restaurant_service.application.mapper.EmployeeResponseMapper;
 import dev.ferv.restaurant_service.application.mapper.PageDtoMapper;
 import dev.ferv.restaurant_service.application.mapper.RestaurantMapper;
 import dev.ferv.restaurant_service.application.service.interfaces.IRestaurantService;
+import dev.ferv.restaurant_service.domain.exeptions.stateExeptions.RestaurantNotBelongsToOwnerExeption;
 import dev.ferv.restaurant_service.domain.model.PageResult;
 import dev.ferv.restaurant_service.domain.model.Restaurant;
 import dev.ferv.restaurant_service.domain.port.in.employee.IGetEmployeeRankingUseCase;
@@ -77,7 +78,7 @@ public class RestaurantService implements IRestaurantService{
         Restaurant restaurant = getRestaurantsUseCase.getRestaurantById(restaurantId);
 
         if(employeeId != restaurant.getOwnerId()){
-            throw new RuntimeException("The restaurant does not belongs to the current owner");
+            throw new RestaurantNotBelongsToOwnerExeption();
         }
 
         return employeeResponseMapper.toResponseList(

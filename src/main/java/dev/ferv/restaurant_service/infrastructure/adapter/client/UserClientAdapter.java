@@ -17,4 +17,7 @@ public interface UserClientAdapter extends IUserClientPort{
     @GetMapping("user/get/{id}")
     UserClient getUserById(@PathVariable Long id, @RequestHeader("Authorization") String jwt); 
 
+    @GetMapping("user/getContact/{id}")
+    UserClient getUserContactById(@PathVariable Long id, @RequestHeader("Authorization") String jwt); 
+
 }
